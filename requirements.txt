@@ -1,0 +1,2 @@
+zeep
+requests   # already a zeep dependency
