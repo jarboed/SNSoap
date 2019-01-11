@@ -1,7 +1,4 @@
-# SNSoap
-
-***
-## Overview
+# Overview
 
 The SNSoap module demonstrates a method for querying ServiceNow tables via ServiceNow's [SOAP web service](https://docs.servicenow.com/bundle/london-application-development/page/integrate/inbound-soap/concept/c_SOAPWebService.html).  It simplifies ad-hoc joins and queries for analytics against your ServiceNow environment in idiomatic python, without worrying about whatever plumbing lies between constructed query parameters and being able to iterate through the pages of results.
 
@@ -13,9 +10,7 @@ Once authenticated, you call the **run_query()** generator function with a *tabl
 
 The authenticated ServiceNow user requires at least *soap_query* access in the target environment (see ServiceNow [Base System Roles](https://docs.servicenow.com/bundle/london-platform-administration/page/administer/roles/reference/r_BaseSystemRoles.html) doc).
 
-
-***
-## Parameters for run_query()
+# Parameters for run_query()
 
 Create the **SNSoap** instance with:
 ```python
@@ -28,10 +23,10 @@ The SNSoap instance contains the **run_query()** function with the following par
 run_query(table, query_parms=None, sys_ids=None, page_size=250)
 ```
 
-### table
+## table
 A string name for the targeted ServiceNow resource, such as those listed at [Tables and Classes](https://docs.servicenow.com/bundle/london-platform-administration/page/administer/reference-pages/reference/r_TablesAndClasses.html)
 
-### query_parms
+## query_parms
 A dictionary of key/value pairs for the soap query, used when *sys_ids* is *None*
 
 For example:
@@ -43,12 +38,12 @@ For example:
 {'__encoded_query':'mi_valueSTARTSWITHfoo^ORmi_value=bar'}
 ```
 
-### sys_ids
+## sys_ids
 An unordered list of primary keys for [getRecords](https://docs.servicenow.com/integrate/web_services_apis/reference/r_GetRecords.html) (technically, any iterable of objects supporting *\_\_str\_\_*)
 
 Normally you are only providing *sys_ids* on subsequent calls, using keys found in reference fields from earlier queries of related tables.  Duplicate *sys_ids* are eliminated and order is not preserved in the response.  Each record in the response is uniquely identifiable by its key in the *sys_id* field.
 
-### page_size
+## page_size
 An integer specifying *sys_ids* chunk size
 
 Requests that [retrieve a large number of records using SOAP](https://docs.servicenow.com/bundle/jakarta-application-development/page/integrate/examples/concept/c_RtvLrgNmbrRcrdSOAP.html?title=Retrieving_A_Large_Number_Of_Records_Using_SOAP) must be split into smaller queries, or risk an incomplete records result.  **run_query()** repeatedly yields responses as a list of up to *page_size* [zeep.objects.getRecordsResult](#zeep) objects, until no records remain.  ServiceNow currently limits SOAP responses to 250 records, but with paging it's no problem to pull down thousands, processed a page at a time.
@@ -60,8 +55,7 @@ Of course you can simply iterate over each record individually with a nested for
            pass   # Process the response one record at a time here
 ```
 
-***
-## Zeep
+# Zeep
 
 SNSoap has a dependency on the [Zeep](https://python-zeep.readthedocs.io/en/master/) Python SOAP client library.  For more examples using the Zeep client with ServiceNow, check out [Zeep for Soap Web Services from Python](https://servicenowsoap.wordpress.com/2017/08/23/zeep-for-soap-web-services-from-python/).
 
@@ -77,19 +71,25 @@ SNSoap's **run_query()** generator yields lists of *zeep.objects.getRecordsResul
     [{key: record[key] for key in desired_fields} for record in page]
     ```
 
-***
-## Quick Start
+# Quick Start
 
-### Install
+## Install
 
-1. Install _Zeep_ and its dependencies (via [pip](https://pypi.org/project/pip/) recommended).
+1. Add the SNSoap.py module into your python project's directory for import.
+
+2. Install _Zeep_ and its dependencies (via [pip](https://pypi.org/project/pip/) recommended).
     ```shell
     pip install zeep
     ```
+    **- OR -** using the more typical flow for [virtualenv](https://virtualenv.pypa.io/) users:
+    ``` shell
+    virtualenv env
+    . env/bin/activate
+    pip install -r requirements.txt
+    ```
+    The activation step above is `env\Scripts\activate` in a Windows virtualenv setup.
 
-2. Add the SNSoap.py module into your directory for import
-
-### Sample code
+## Sample code
 
 ```python
 import getpass
@@ -113,7 +113,6 @@ for request, cat_item in request_items.items():
     print('{} is a "{}" request'.format(request, catalog_items[cat_item]))
 ```
 
-***
-## License
+# License
 
 The SNSoap module is released under the [MIT License](https://opensource.org/licenses/MIT)
