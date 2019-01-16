@@ -5,7 +5,7 @@ class SNSoap:
     """Holds ServiceNow connection information for SOAP web service
     calls, and provides the run_query generator to simplify reading
     getRecords response.
-    
+
     The authenticating user needs at least soap_query access (see
     ServiceNow base system role doc).
 
@@ -18,7 +18,7 @@ class SNSoap:
 
     For more on Zeep and ServiceNow, check out
     https://servicenowsoap.wordpress.com/2017/08/23/zeep-for-soap-web-services-from-python/
-    """    
+    """
     def __init__(self, instance, username, password):
         self.instance = instance
         self.session = requests.Session()
@@ -47,7 +47,7 @@ class SNSoap:
         be a dictionary of the arguments for the SOAP query,
         e.g. {'active':'false', 'state':7}.  Encoded queries are set
         like: {'__encoded_query':'active=false^state=7'}
-        
+
         Being able to specify sys_ids is a convenience that is useful
         when making multiple calls to perform ad-hoc joins on tables
         for analytics (especially if you have no relevant database view
@@ -56,7 +56,7 @@ class SNSoap:
         The generator yields lists of zeep.objects.getRecordsResult
         objects. Usually you will simply treat each record as its
         own dictionary-like object with __getitem__, or an iterable.
-        
+
         If you do want to convert a zeep.objects.getRecordsResult
         object into a native Python type (i.e. an ordered dict), use
         zeep.helpers.serialize_object(record).
